@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<malloc.h>
+#include<string.h>
 	//structure creating:
 struct node
 {
@@ -15,11 +16,21 @@ void insert_beg(struct node **head);
 void insert_point(struct node **head);
 void search(struct node **head);
 void reverse(struct node **head);
+void reverse_list(struct node **head);
+void reverse_recursion(struct node **head,struct node *prev_node,struct node *curr_node,struct node *next_node);
+void traverse_back(struct node **head);
+int cisco();
+
 	// main Function:
 void main()
 {
 	struct node *head=NULL;
-	int choice = -1;
+	struct node *prev_node=NULL;
+	struct node *curr_node;
+        struct node *next_node= NULL;
+	 
+	int choice = -1,i=0;
+	 int c=cisco();
 	//printing Options:
 	while(choice != 0){
 
@@ -28,7 +39,8 @@ void main()
 		printf("\n\n\tINSERT at Begening: Press: 1     Remove Element: Press: 5");
 		printf("\n\n\tINSERT at End:      Press: 2     Search Data:    Press: 6");
 		printf("\n\n\tINSERT at Point:    Press: 3     Reverse List:   Press: 7");
-		printf("\n\n\tTraverse list:      Press: 4     Exit:           Press: 0");
+		printf("\n\n\tTraverse Forward:   Press: 4     Reverse Rcrsn:  Press: 8");
+		printf("\n\n\tTraverse backend:   Press: 9     Exit:           Press: 0");
 	
 		printf("\n\n\t      ***Enter your choise***: ");
 		scanf("%d",&choice);
@@ -54,8 +66,16 @@ void main()
 			search(&head);
 			break;
 		case 7:
-			reverse(&head);
+			reverse_list(&head);
 			break;
+		case 8:
+			 curr_node=head;
+			 reverse_recursion(&head,prev_node,curr_node,next_node);
+			 break;
+		case 9:
+			 traverse_back(&head);
+			 break;
+			 
 		case 0:
 			break;
 		default:
@@ -66,7 +86,31 @@ void main()
 
 	}
 }
-	//insert Function : End
+
+
+void traverse_back(struct node **head){
+	system("clear");
+	struct node *node;
+	struct node *ptr=*head;
+	struct node *x;
+	while(ptr!=NULL){
+		node=ptr;
+		ptr=ptr->link;
+	}
+	printf("\n\n\tTraversing List.....\n\t");
+	printf("--> %d",node->data);
+	ptr=*head;
+	while(node!=*head){
+		while(ptr!=node){
+			x=ptr;
+			ptr=ptr->link;
+		}
+		printf("--> %d",x->data);
+		node=x;
+		ptr=*head;
+	}
+}
+	//Insert at End:
 void insert_end(struct node **head){
 	 system("clear");
 	 struct node *temp_node = (struct node*) malloc(sizeof(struct node));
@@ -90,7 +134,7 @@ void insert_end(struct node **head){
          			break;
    			}
    			temp_head = temp_head->link;
-		}
+		} 
 	}
 
 	 if(inserted){
@@ -102,8 +146,7 @@ void insert_end(struct node **head){
 	 }
 
 }
-
-	//Traverse Function: 
+	// Traverse List:
 void traverse_list(struct node **head){
 	system("clear");
 	if(*head == NULL){
@@ -124,7 +167,7 @@ void traverse_list(struct node **head){
 		temp_node = temp_node->link;
   	}
 }
-	//Remove Function:
+	//Remove Element:
 void remove_element(struct node **head)
 {
 	system("clear");
@@ -167,7 +210,7 @@ void remove_element(struct node **head)
 	
 	}
 }
-	//Insert Function: Point:
+	//Insert at Point:
 void insert_point(struct node **head){
 	system("clear");
 	if(*head==NULL){
@@ -199,7 +242,8 @@ void insert_point(struct node **head){
 	
 
 }
-	//Insert Function: Begening:
+
+	//Insert at Begening1:
 void insert_beg(struct node **head){
 
 	system("clear");
@@ -213,7 +257,7 @@ void insert_beg(struct node **head){
 	printf("\n\n\t***Inserted Seccessful***\n");
 
 }
-	//Search Function: 
+	//Search Function:
 void search(struct node **head){
 	system("clear");
 	struct node *temp_head=*head;
@@ -237,32 +281,60 @@ void search(struct node **head){
 
 
 }
+//Password Protected:	
+int cisco(){
 
-void reverse(struct node **head){
-
-	if(*head==NULL){
-		printf("Invalid Head");
-	}
-	else{
-		struct node *pre_node,*reverse_node,*next_node;
-		pre_node=*head;
-		reverse_node=pre_node->link;
-		next_node=reverse_node->link;
-		pre_node->link=NULL;
-		
-		while(next_node!=NULL){
-			reverse_node->link=pre_node;
-			pre_node=reverse_node;
-			reverse_node=next_node;
-			next_node=next_node->link;
-		
-		}
-		reverse_node->link=pre_node;
-		*head=reverse_node;
-		system("clear");
-		printf("\n\t***Reversing Seccessful***\n");
-	
-	}
-
+char echo[20];
+char tes[20];
+printf("Enter Username:  ");
+scanf("%s",echo);
+printf("Enter Password:  ");
+scanf("%s",tes);
+if(strcmp(echo,"abhaydce")==0 && strcmp(tes,"abc@123")==0){
+        system("clear");
+printf("\n***Login seccefull***\n");
+}
+else {
+        system("clear");
+        printf("\n***Incorrect Id Or Password***\n");
+        cisco();
 
 }
+
+return 0;
+}		
+	//Reverse List Using Loop:
+void reverse_list(struct node **head){
+	system("clear");
+	struct node *prev_node=NULL;
+	struct node *curr_node=*head;
+	struct node *next_node= NULL;
+	while(curr_node!=NULL){
+	
+		next_node = curr_node->link;
+		
+		curr_node->link=prev_node;
+
+		prev_node = curr_node;
+
+		curr_node = next_node;
+
+	}
+	*head=prev_node;
+}
+	//Reverse_list Using Recursion:
+void reverse_recursion(struct node **head,struct node *prev_node,struct node *curr_node,struct node *next_node){
+	system("clear");
+	if(curr_node!=NULL){
+		next_node = curr_node->link;
+                curr_node->link=prev_node;
+                prev_node = curr_node;
+                curr_node = next_node;
+	}
+	else {
+		*head=prev_node;
+		return;
+	}
+reverse_recursion(&*head,prev_node,curr_node,next_node);
+}
+
